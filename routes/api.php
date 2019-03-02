@@ -17,15 +17,32 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/orders', 'ApiController@all_orders');
-Route::get('orders/{order}', 'ApiController@show_order');
-Route::post('orders', 'ApiController@store_order');
-Route::put('orders/{order}', 'ApiController@update_order');
-Route::delete('orders/{order}', 'ApiController@delete_order');
+Route::get('/orders', 'ApiController@all_orders')->middleware('auth:api');
+//Route::get('orders/{order}', 'ApiController@show_order');
+Route::post('orders', 'ApiController@store_order')->middleware('auth:api');
+Route::put('orders/{order}', 'ApiController@update_order')->middleware('auth:api');
+Route::delete('orders/{order}', 'ApiController@delete_order')->middleware('auth:api');
 
 
-Route::get('/users', 'ApiController@all_users');
+Route::get('/users', 'ApiController@all_users')->middleware('auth:api');
 Route::get('user/{user}', 'ApiController@show_user');
 Route::post('user', 'ApiController@store_user');
-Route::put('user/{user}', 'ApiController@update_user');
-Route::delete('user/{user}', 'ApiController@delete_user');
+Route::put('user/{user}', 'ApiController@update_user')->middleware('auth:api');
+Route::delete('user/{user}', 'ApiController@delete_user')->middleware('auth:api');
+
+
+Route::get('/user', 'ApiController@login');
+Route::get('orders/{id}', 'ApiController@show_user_order')->middleware('auth:api');
+
+Route::get('verifytoken', 'ApiController@verify_token');
+
+Route::get('rate', 'ApiController@get_rate')->middleware('auth:api');
+
+Route::get('rates', 'ApiController@all_rates')->middleware('auth:api');
+
+Route::get('saved_orders/{id}', 'ApiController@saved_orders')->middleware('auth:api');
+
+Route::post('make_payment', 'ApiController@make_payment')->middleware('auth:api');
+
+
+

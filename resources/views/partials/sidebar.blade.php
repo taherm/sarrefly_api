@@ -25,15 +25,24 @@
                 </a>
 
             </li>
-            
+
             <li class="nav-item  ">
+                <a href="/rates/" class="nav-link nav-toggle">
+                    <i class="glyphicon-euro"></i>
+                    <span class="title">Rates</span>
+                    <span class="arrow"></span>
+                </a>
+
+            </li>
+            
+           <!-- <li class="nav-item  ">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-settings"></i>
                     <span class="title">System</span>
                     <span class="arrow"></span>
                 </a>
 
-            </li>
+            </li>  -->
 
         </ul>
         <!-- END SIDEBAR MENU -->

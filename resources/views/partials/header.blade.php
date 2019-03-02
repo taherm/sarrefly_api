@@ -28,6 +28,10 @@
                                 <a href="/create_user">
                                     <i class="icon-docs"></i> New User </a>
                             </li>
+                            <li>
+                                <a href="/create_rate">
+                                    <i class="icon-docs"></i> New Rate </a>
+                            </li>
                           
                         </ul>
                     </div>

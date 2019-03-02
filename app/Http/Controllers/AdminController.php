@@ -28,6 +28,20 @@ class AdminController extends Controller
         return redirect('/users');
     }
 
+    public function add_rate(Request $request)
+    {
+        $this->validate(request(), [
+            'country' => 'required',
+            'rate' => 'required',
+        ]);
+        $rate = new \App\Rate;
+        $rate->country = request()->country;
+        $rate->rate = request()->rate;
+        $rate->save();
+        session()->flash('message', 'Rate Added!');
+        return redirect('/rates');
+    }
+
 
     public function destroy($id)
     {
@@ -47,6 +61,15 @@ class AdminController extends Controller
         return redirect('/users');
     }
 
+
+    public function delete_rate($id)
+    {
+        $rate = \App\Rate::find($id);
+        $rate->delete();
+        session()->flash('message', 'Rate Deleted!');
+
+        return redirect('/rates');
+    }
 
 
     public function update($id)
@@ -83,6 +106,19 @@ class AdminController extends Controller
         return redirect('/users');
     }
 
+
+    public function update_rate($id)
+    {
+        $rate = \App\Rate::find($id);
+        $rate->rate = request()->rate;
+        $rate->country = request()->country;
+        $rate->save();
+        session()->flash('message', 'Rate Updated!');
+
+        return redirect('/rates');
+    }
+
+
     public function order_completed($id)
     {
         $order = \App\Order::find($id);
@@ -91,5 +127,60 @@ class AdminController extends Controller
         session()->flash('message', 'Order Status Updated!');
 
         return redirect('/');
+    }
+
+    public function code($id)
+    {
+
+        $order = \App\Order::find($id);
+        $order->code = request('code');
+        $order->save();
+        session()->flash('message', 'Code Updated!');
+
+        return redirect('/');
+    }
+
+    public function knet(Request $request)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $request->tap_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POSTFIELDS => "{}",
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Bearer sk_test_XKokBfNWv6FIYuTMg5sLPjhJ"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        $data = json_decode($response);
+        if ($err) {
+            $order = \App\Order::where('charge_id', $request->tap_id)->first();
+            $order->status = "failed";
+            $order->save();
+            return view('no_thanks');
+        } else {
+            if ($data->status == "CAPTURED") {
+                $order = \App\Order::where('charge_id', $request->tap_id)->first();
+                $order->status = "success";
+                $order->save();
+                return view('thanks');
+            } else {
+                $order = \App\Order::where('charge_id', $request->tap_id)->first();
+                $order->status = "failed";
+                $order->save();
+                return view('no_thanks');
+            }
+        }
     }
 }

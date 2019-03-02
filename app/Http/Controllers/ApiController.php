@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Order;
 use App\User;
+use App\Rate;
 
 
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class ApiController extends Controller
 {
     public function all_orders()
     {
-        return \App\Order::all();
+        return \App\Order::where('status', '!=', 'failed')->get();
     }
 
     public function show_order(Order $order)
@@ -20,9 +21,15 @@ class ApiController extends Controller
         return $order;
     }
 
+    public function show_user_order($id)
+    {
+        $order = \App\Order::where('user_id', $id)->where('status', 'success')->get();
+        return $order;
+    }
+
     public function store_order(Request $request)
     {
-        $order = Order::create($request->all());
+        $order = Order::create($request->all())->id;
         return response()->json($order, 201);
     }
 
@@ -42,7 +49,12 @@ class ApiController extends Controller
 
 
 
-
+    public function login(Request $request)
+    {
+        $val = User::where('name', $request->name)->where('password', $request->password)->first();
+        //return (string)(!empty($val));
+        return $val;
+    }
 
 
 
@@ -74,5 +86,71 @@ class ApiController extends Controller
         $user->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function verify_token(Request $request)
+    {
+        $val = User::where('api_token', $request->api_token)->first();
+        if (!$val) {
+            return response()->json(0, 404);
+        }
+        return $val;
+    }
+
+    public function get_rate(Request $request)
+    {
+        $rate = Rate::where('country', $request->country)->first();
+        $val = $rate->rate;
+        return $val;
+    }
+
+
+    public function saved_orders($id)
+    {
+        $saved = User::find($id)->orders->where('saved', 1)->flatten();
+        return $saved;
+    }
+
+    public function all_rates()
+    {
+        $rate = Rate::all();
+
+        return $rate;
+    }
+
+    public function make_payment(Request $request)
+    {
+        $order = Order::where('id', $request->order_id)->first();
+        $amount = $request->amount + $request->charges;
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "{\"amount\":$amount,\"currency\":\"KWD\",\"threeDSecure\":true,\"save_card\":false,\"description\":\"Test Description\",\"statement_descriptor\":\"Sample\",\"metadata\":{\"udf1\":\"test 1\",\"udf2\":\"test 2\"},\"reference\":{\"transaction\":\"txn_0001\",\"order\":\"ord_0001\"},\"receipt\":{\"email\":false,\"sms\":true},\"customer\":{\"first_name\":\"$order->receiver_name\",\"middle_name\":\"test\",\"last_name\":\"test\",\"email\":\"test@test.com\",\"phone\":{\"country_code\":\"965\",\"number\":\"50000000\"}},\"source\":{\"id\":\"src_kw.knet\"},\"post\":{\"url\":\"http://your_website.com/post_url\"},\"redirect\":{\"url\":\"http://192.168.1.105:8080/sarrefly_api/public/knet\"}}",
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Bearer sk_test_XKokBfNWv6FIYuTMg5sLPjhJ",
+                "content-type: application/json"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            $response = (\GuzzleHttp\json_decode($response));
+            $order->charge_id = $response->id;
+            $order->save();
+            return response()->json($response);
+        }
     }
 }
