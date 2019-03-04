@@ -26,7 +26,7 @@ class CreateOrdersTable extends Migration
             $table->integer('charges')->nullable();
             $table->string('order_type');
             $table->integer('code')->nullable();
-            $table->integer('converted_amount')->nullable();
+            $table->decimal('converted_amount', 8, 2)->nullable();
             $table->boolean('saved')->nullable();
             $table->string('status');
             $table->timestamps();
