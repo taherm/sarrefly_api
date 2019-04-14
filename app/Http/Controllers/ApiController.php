@@ -24,6 +24,7 @@ class ApiController extends Controller
     public function show_user_order($id)
     {
         $order = \App\Order::where('user_id', $id)->where('status', 'success')->get();
+
         return $order;
     }
 
@@ -122,6 +123,8 @@ class ApiController extends Controller
     {
         $order = Order::where('id', $request->order_id)->first();
         $amount = $request->amount + $request->charges;
+        $user_details = Order::find($order->id)->user;
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -132,7 +135,7 @@ class ApiController extends Controller
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "{\"amount\":$amount,\"currency\":\"KWD\",\"threeDSecure\":true,\"save_card\":false,\"description\":\"Test Description\",\"statement_descriptor\":\"Sample\",\"metadata\":{\"udf1\":\"test 1\",\"udf2\":\"test 2\"},\"reference\":{\"transaction\":\"txn_0001\",\"order\":\"ord_0001\"},\"receipt\":{\"email\":false,\"sms\":true},\"customer\":{\"first_name\":\"$order->receiver_name\",\"middle_name\":\"test\",\"last_name\":\"test\",\"email\":\"test@test.com\",\"phone\":{\"country_code\":\"965\",\"number\":\"50000000\"}},\"source\":{\"id\":\"src_kw.knet\"},\"post\":{\"url\":\"http://your_website.com/post_url\"},\"redirect\":{\"url\":\"http://192.168.1.104:8080/sarrefly_api/public/knet\"}}",
+            CURLOPT_POSTFIELDS => "{\"amount\":$amount,\"currency\":\"KWD\",\"threeDSecure\":true,\"save_card\":false,\"description\":\"$order->amount KD for $order->order_type By $user_details->name\",\"statement_descriptor\":\"Sample\",\"metadata\":{\"udf1\":\"test 1\",\"udf2\":\"test 2\"},\"reference\":{\"transaction\":\"$order->charge_id\",\"order\":\"$order->id\"},\"receipt\":{\"email\":false,\"sms\":true},\"customer\":{\"first_name\":\"$order->receiver_name\",\"middle_name\":\"test\",\"last_name\":\"test\",\"email\":\"$user_details->email\",\"phone\":{\"country_code\":\"965\",\"number\":\"50000000\"}},\"source\":{\"id\":\"src_kw.knet\"},\"post\":{\"url\":\"http://your_website.com/post_url\"},\"redirect\":{\"url\":\"http://192.168.8.103:80/sarrefly_api/public/knet\"}}",
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer sk_test_XKokBfNWv6FIYuTMg5sLPjhJ",
                 "content-type: application/json"
