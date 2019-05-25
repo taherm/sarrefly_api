@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Driver;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,5 +45,38 @@ Route::get('saved_orders/{id}', 'ApiController@saved_orders')->middleware('auth:
 
 Route::post('make_payment', 'ApiController@make_payment')->middleware('auth:api');
 
+Route::get('success_orders', 'ApiController@success_orders');
 
 
+
+Route::post('/location', function (Request $request) {
+    $options = array(
+        'cluster' => 'ap1',
+        'useTLS' => true
+    );
+    $pusher = new Pusher\Pusher(
+        '71d738b559f95f3c22c2',
+        '7dc73d4a265bd2eb87f2',
+        '770515',
+        $options
+    );
+
+    // Driver::updateOrCreate(
+    //    ['id' => 1],
+    //    ['latitude' => $request->latitude, 'longitude' => $request->longitude]
+    // );
+
+
+    Driver::first()->update($request->all());
+
+
+    $data['latitude'] = $request->latitude;
+    $data['longitude'] = $request->longitude;
+
+    $pusher->trigger('my-channel', 'my-event', $data);
+    // dd("done!");
+
+
+
+
+});

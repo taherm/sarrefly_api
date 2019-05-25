@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration
             $table->integer('receiver_mobile');
             $table->string('receiver_address');
             $table->bigInteger('civil_id');
-            $table->string('country');
+            $table->string('country')->nullable();
             $table->decimal('amount', 8, 2);
             $table->integer('charges')->nullable();
             $table->string('order_type');
@@ -29,6 +29,9 @@ class CreateOrdersTable extends Migration
             $table->decimal('converted_amount', 8, 2)->nullable();
             $table->boolean('saved')->nullable();
             $table->string('status');
+            $table->string('location_data')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
         });
     }
