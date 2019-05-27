@@ -67,7 +67,8 @@ Route::post('/location', function (Request $request) {
     // );
 
 
-    Driver::first()->update($request->all());
+    // Driver::first()->update($request->all());
+    Driver::first()->updateOrCreate($request->all());
 
 
     $data['latitude'] = $request->latitude;
