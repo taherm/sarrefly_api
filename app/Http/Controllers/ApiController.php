@@ -54,8 +54,7 @@ class ApiController extends Controller
     {
         $val = User::where('name', $request->name)->where('password', $request->password)->first();
         //return (string)(!empty($val));
-        dd($val);
-        //return $val;
+        return $val;
     }
 
 
