@@ -52,10 +52,9 @@ class ApiController extends Controller
 
     public function login(Request $request)
     {
-        $val = \App\User::all()->where('name', $request->name)->where('password', $request->password)->first();
+        $val = User::where('name', $request->name)->where('password', $request->password)->first();
         //return (string)(!empty($val));
-        dd($val);
-        //return $val;
+        return $val;
     }
 
 
