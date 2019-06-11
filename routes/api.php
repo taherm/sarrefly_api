@@ -25,14 +25,12 @@ Route::put('orders/{order}', 'ApiController@update_order')->middleware('auth:api
 Route::delete('orders/{order}', 'ApiController@delete_order')->middleware('auth:api');
 
 
-Route::get('/users', 'ApiController@all_users')->middleware('auth:api');
+Route::get('/users', 'ApiController@all_users');
 Route::get('user/{user}', 'ApiController@show_user');
 Route::post('user', 'ApiController@store_user');
 Route::put('user/{user}', 'ApiController@update_user')->middleware('auth:api');
 Route::delete('user/{user}', 'ApiController@delete_user')->middleware('auth:api');
-
-
-Route::get('/user', 'ApiController@login');
+\Route::get('/user', 'ApiController@login');
 Route::get('orders/{id}', 'ApiController@show_user_order')->middleware('auth:api');
 
 Route::get('verifytoken', 'ApiController@verify_token');
