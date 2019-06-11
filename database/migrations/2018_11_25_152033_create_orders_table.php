@@ -20,8 +20,9 @@ class CreateOrdersTable extends Migration
             $table->string('receiver_name');
             $table->integer('receiver_mobile');
             $table->string('receiver_address');
-            $table->bigInteger('civil_id');
+            $table->bigInteger('civil_id')->nullable();
             $table->string('country')->nullable();
+            $table->string('currency')->nullable();
             $table->decimal('amount', 8, 2);
             $table->integer('charges')->nullable();
             $table->string('order_type');

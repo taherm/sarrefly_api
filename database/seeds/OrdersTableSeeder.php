@@ -11,5 +11,11 @@ class OrdersTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    { }
+    {
+
+
+        \DB::table('orders')->delete();
+
+        \DB::table('orders')->insert(array());
+    }
 }
