@@ -33,7 +33,7 @@ Route::delete('user/{user}', 'ApiController@delete_user')->middleware('auth:api'
 
 
 Route::get('/user', 'ApiController@login');
-Route::get('orders/{id}', 'ApiController@show_user_order');
+Route::get('orders/{id}', 'ApiController@show_user_order')->middleware('auth:api');
 
 Route::get('verifytoken', 'ApiController@verify_token');
 
