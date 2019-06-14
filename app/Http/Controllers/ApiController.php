@@ -25,7 +25,7 @@ class ApiController extends Controller
     {
         $order = \App\Order::where('user_id', $id)->where('status', 'success')->get();
 
-        return $order;
+        return response()->json($order, 200);
     }
 
     public function store_order(Request $request)
