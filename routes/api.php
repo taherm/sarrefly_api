@@ -41,7 +41,7 @@ Route::get('rate', 'ApiController@get_rate')->middleware('auth:api');
 
 Route::get('rates', 'ApiController@all_rates')->middleware('auth:api');
 
-Route::get('saved_orders/{id}', 'ApiController@saved_orders')->middleware('auth:api');
+Route::post('saved_orders/{id}', 'ApiController@saved_orders')->middleware('auth:api');
 
 Route::post('make_payment', 'ApiController@make_payment')->middleware('auth:api');
 
