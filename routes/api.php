@@ -27,7 +27,7 @@ Route::delete('orders/{order}', 'ApiController@delete_order')->middleware('auth:
 
 Route::get('/users', 'ApiController@all_users');
 Route::get('user/{user}', 'ApiController@show_user');
-Route::post('user', 'ApiController@store_user');
+Route::post('/newuser', 'ApiController@store_user');
 Route::put('user/{user}', 'ApiController@update_user')->middleware('auth:api');
 Route::delete('user/{user}', 'ApiController@delete_user')->middleware('auth:api');
 
@@ -45,7 +45,7 @@ Route::post('saved_orders/{id}', 'ApiController@saved_orders')->middleware('auth
 
 Route::post('make_payment', 'ApiController@make_payment')->middleware('auth:api');
 
-Route::get('success_orders', 'ApiController@success_orders');
+Route::post('success_orders', 'ApiController@success_orders');
 
 
 
