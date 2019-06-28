@@ -97,12 +97,16 @@
                                                     <a href="{{ url('order_completed/'.$order_data->id) }}">
                                                         <i class="icon-docs"></i> Mark as Completed </a>
                                                 </li>
-                                                @if($order_data->order_type=="WU")
+                                                {{-- @if($order_data->order_type=="WU")
+                                                <li>
+                                                    <a href="{{ url('code/'.$order_data->id) }}">
+                                                <i class="icon-docs"></i> Enter Code </a>
+                                                </li>
+                                                @endif--}}
                                                 <li>
                                                     <a href="{{ url('code/'.$order_data->id) }}">
                                                         <i class="icon-docs"></i> Enter Code </a>
                                                 </li>
-                                                @endif
 
                                             </ul>
                                         </div>
@@ -129,4 +133,4 @@
 <!-- END CONTENT BODY -->
 
 
-@endsection 
+@endsection
