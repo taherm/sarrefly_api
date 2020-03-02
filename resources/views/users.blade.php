@@ -62,21 +62,20 @@
                                     <td class="center">{{$user_data->orders->count()}} </td>
                                     <td>
                                         <div class="btn-group">
-                                            <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown"
-                                                aria-expanded="false"> Actions
+                                            <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
                                                 <i class="fa fa-angle-down"></i>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                            <li>
+                                                <li>
                                                     <a href="{{ url('edit_user/'.$user_data->id) }}">
                                                         <i class="icon-docs"></i> Edit User </a>
                                                 </li>
                                                 <li>
-                                                <form method="POST" action="/delete_user/{{$user_data->id}}" class="delete">
-										{{ csrf_field() }}
-										<input name="_method" value="delete" type="hidden">
-										<button class="btn btn-danger" type="submit">Delete User</button>
-									</form>
+                                                    <form method="POST" action="/delete_user/{{$user_data->id}}" class="delete">
+                                                        {{ csrf_field() }}
+                                                        <input name="_method" value="delete" type="hidden">
+                                                        <button class="btn btn-danger" type="submit">Delete User</button>
+                                                    </form>
                                                 </li>
                                             </ul>
                                         </div>
